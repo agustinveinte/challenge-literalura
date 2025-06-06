@@ -1,4 +1,4 @@
-package com.agustin.literalura.book.model;
+package com.agustin.literalura.book.domain;
 
 public enum Language {
     EN("en"),
@@ -25,6 +25,15 @@ public enum Language {
 
     Language(String displayName) {
         this.displayName = displayName;
+    }
+
+    public static Language fromString(String text) {
+        for (Language lang : Language.values()) {
+            if (lang.displayName.equalsIgnoreCase(text)) {
+                return lang;
+            }
+        }
+        return OTHER;
     }
 
     public String getDisplayName() {

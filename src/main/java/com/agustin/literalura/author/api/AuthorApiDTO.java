@@ -1,11 +1,15 @@
 package com.agustin.literalura.author.api;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record AuthorApiDTO(
+        @JsonAlias("name")
         String name,
-        Integer birth_year,
-        Integer death_year
+        @JsonAlias("birth_year")
+        Integer birthYear,
+        @JsonAlias("death_year")
+        Integer deathYear
 ) {
 }
