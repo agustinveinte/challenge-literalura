@@ -142,7 +142,7 @@ public class Menu {
                 System.out.println("Autores: " + book.authors());
                 System.out.println("Idiomas:" + book.languages());
                 System.out.println("Numero de descargas: " + book.downloadCount());
-                System.out.println("---------------");
+                System.out.println("---------------"+"\n");
             }
         } else {
             System.out.println("No hay libros registrados");
