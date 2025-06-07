@@ -1,8 +1,10 @@
 package com.agustin.literalura.view;
 
 import com.agustin.literalura.author.api.AuthorApiDTO;
+import com.agustin.literalura.author.domain.Author;
 import com.agustin.literalura.author.domain.AuthorRepository;
 import com.agustin.literalura.author.service.AuthorService;
+import com.agustin.literalura.author.view.AuthorViewDTO;
 import com.agustin.literalura.book.api.BookApi;
 import com.agustin.literalura.book.api.BookApiDTO;
 import com.agustin.literalura.book.service.BookService;
@@ -10,10 +12,7 @@ import com.agustin.literalura.book.service.TheBookAlreadyExistsException;
 import com.agustin.literalura.book.view.BookViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Menu {
@@ -33,21 +32,24 @@ public class Menu {
         int op;
         do {
             System.out.println("""
-                1-Buscar libros por titulo.
-                2-Listar libros registrados.
-                3-Listar autores registrados.
-                4-Listar autores vivios en un determinado año.
-                5-Listar libros por idioma.
-                0-Salir.
-                """);
+                    1-Buscar libros por titulo.
+                    2-Listar libros registrados.
+                    3-Listar autores registrados.
+                    4-Listar autores vivios en un determinado año.
+                    5-Listar libros por idioma.
+                    0-Salir.
+                    """);
             System.out.println("Ingrese el numero de opcion:");
             op = consoleInput.nextInt();
             switch (op) {
-                case 1:saveBooksOnDatabase(bookApi);
+                case 1:
+                    saveBooksOnDatabase(bookApi);
                     break;
-                case 2:listBooks();
+                case 2:
+                    listBooks();
                     break;
                 case 3:
+                    listAuthors();
                     break;
                 case 4:
                     break;
@@ -99,22 +101,22 @@ public class Menu {
                         try {
                             bookService.saveBook(bookApiDTO);
                         } catch (TheBookAlreadyExistsException e) {
-                            System.out.println("El libro "+ bookApiDTO.title()+ " ya se encuentra en la base de datos");
+                            System.out.println("El libro " + bookApiDTO.title() + " ya se encuentra en la base de datos");
                         }
                     }
                     break;
                 } else {
                     try {
-                        if (op.isEmpty()||Integer.parseInt(op.trim())==0) {
+                        if (op.isEmpty() || Integer.parseInt(op.trim()) == 0) {
                             System.out.println("Ninguno seleccionado");
                             break;
-                        }else {
-                            BookApiDTO bookSelected=booksFromApi.get(Integer.parseInt(op.trim())-1);
+                        } else {
+                            BookApiDTO bookSelected = booksFromApi.get(Integer.parseInt(op.trim()) - 1);
                             try {
                                 bookService.saveBook(bookSelected);
                                 break;
                             } catch (TheBookAlreadyExistsException e) {
-                                System.out.println("El libro "+ bookSelected.title()+ " ya se encuentra en la base de datos");
+                                System.out.println("El libro " + bookSelected.title() + " ya se encuentra en la base de datos");
                             }
 
                         }
@@ -130,24 +132,36 @@ public class Menu {
         }
     }
 
-    public void listBooks(){
-        Set<BookViewDTO> books=bookService.listBooks();
-        if (!books.isEmpty()){
+    public void listBooks() {
+        Set<BookViewDTO> books = new HashSet<>();
+        books = bookService.listBooks();
+        if (!books.isEmpty()) {
             for (BookViewDTO book : books) {
                 System.out.println("-----LIBRO-----");
-                System.out.println("Titulo: "+book.title());
-                System.out.println("Autores: "+book.authors());
-                System.out.println("Idiomas:"+book.languages());
-                System.out.println("Numero de descargas: "+book.downloadCount());
+                System.out.println("Titulo: " + book.title());
+                System.out.println("Autores: " + book.authors());
+                System.out.println("Idiomas:" + book.languages());
+                System.out.println("Numero de descargas: " + book.downloadCount());
                 System.out.println("---------------");
             }
-        }else {
+        } else {
             System.out.println("No hay libros registrados");
         }
     }
 
-    public void listAuthors(){
-
+    public void listAuthors() {
+        Set<AuthorViewDTO> authors = new HashSet<>();
+        authors = authorService.listAuthors();
+        if (!authors.isEmpty()) {
+            for (AuthorViewDTO author : authors) {
+                System.out.println("Autor: " + author.name());
+                System.out.println("Fecha de nacimiento: " + author.birthYear());
+                System.out.println("Fecha de fallecimiento:" + author.deathYear());
+                System.out.println("Libros: " + author.books()+"\n");
+            }
+        } else {
+            System.out.println("No hay autores registrados");
+        }
     }
 
 }
