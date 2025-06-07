@@ -68,12 +68,14 @@ public class BookService {
         ).collect(Collectors.toSet());
     }
 
-    public Set<AuthorViewDTO>listAuthors(){
-        Set<AuthorViewDTO> authors = new HashSet<>();
-        return authorRepository.findAll().stream().map(author ->
+    @Transactional
+    public Set<BookViewDTO> listBooksByLanguage(Language language) {
+        Set<BookViewDTO> books = new HashSet<>();
+        return bookRepository.findBooksByLanguage(language).stream().map(book ->
                 {
-                    Set<String> books = author.getBooks().stream().map(Book::getTitle).collect(Collectors.toSet());
-                    return new AuthorViewDTO(author.getName(),author.getBirthYear(),author.getDeathYear(),books);
+                    Set<String> authors = book.getAuthors().stream().map(Author::getName).collect(Collectors.toSet());
+                    Set<String> languages = book.getLanguages().stream().map(Language::getDisplayName).collect(Collectors.toSet());
+                    return new BookViewDTO(book.getTitle(),authors,book.getDownloadCount(),languages);
                 }
         ).collect(Collectors.toSet());
     }

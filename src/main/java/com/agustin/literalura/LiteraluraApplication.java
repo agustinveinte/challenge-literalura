@@ -35,19 +35,6 @@ public class LiteraluraApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        BookApi api = new GutendexApi();
-        List<BookApiDTO> booksApi = api.getBooksByTitleOrAuthor("dickens");
-        System.out.println("Obteniendo libros desde la API");
-        booksApi.forEach(bookApiDTO -> {
-            try {
-                bookService.saveBook(bookApiDTO);
-            } catch (TheBookAlreadyExistsException e) {
-                System.out.println("El libro " + bookApiDTO.title() + " ya existe, no es necesario guardarlo");
-            }
-        });
-
-        bookService.listAuthors().forEach(System.out::println);
-
 
     }
 }
