@@ -5,6 +5,7 @@ import com.agustin.literalura.author.service.AuthorService;
 import com.agustin.literalura.author.view.AuthorViewDTO;
 import com.agustin.literalura.book.api.BookApi;
 import com.agustin.literalura.book.api.BookApiDTO;
+import com.agustin.literalura.book.domain.Language;
 import com.agustin.literalura.book.service.BookService;
 import com.agustin.literalura.book.service.TheBookAlreadyExistsException;
 import com.agustin.literalura.book.view.BookViewDTO;
@@ -52,6 +53,7 @@ public class Menu {
                     listAuthorsAliveInYear();
                     break;
                 case 5:
+                    listBooksByLanguage();
                     break;
                 case 0:
                     break;
@@ -140,8 +142,9 @@ public class Menu {
                 System.out.println("Autores: " + book.authors());
                 System.out.println("Idiomas:" + book.languages());
                 System.out.println("Numero de descargas: " + book.downloadCount());
-                System.out.println("---------------"+"\n");
+                System.out.println("---------------" + "\n");
             }
+
         } else {
             System.out.println("No hay libros registrados");
         }
@@ -155,31 +158,75 @@ public class Menu {
                 System.out.println("Autor: " + author.name());
                 System.out.println("Fecha de nacimiento: " + author.birthYear());
                 System.out.println("Fecha de fallecimiento:" + author.deathYear());
-                System.out.println("Libros: " + author.books()+"\n");
+                System.out.println("Libros: " + author.books() + "\n");
             }
+
         } else {
             System.out.println("No hay autores registrados");
         }
     }
-    public void listAuthorsAliveInYear(){
+
+    public void listAuthorsAliveInYear() {
         String year;
-        Set<AuthorViewDTO> authors=new HashSet<>();
+        Set<AuthorViewDTO> authors = new HashSet<>();
         System.out.println("Ingrese el año que desea consultar: ");
         try {
-            year=consoleInput.next();
-            authors=authorService.listAuthorsAliveInYear(Integer.parseInt(year));
-            if (!authors.isEmpty()){
+            year = consoleInput.next();
+            authors = authorService.listAuthorsAliveInYear(Integer.parseInt(year));
+            if (!authors.isEmpty()) {
                 for (AuthorViewDTO author : authors) {
                     System.out.println("Autor: " + author.name());
                     System.out.println("Fecha de nacimiento: " + author.birthYear());
                     System.out.println("Fecha de fallecimiento:" + author.deathYear());
-                    System.out.println("Libros: " + author.books()+"\n");
+                    System.out.println("Libros: " + author.books() + "\n");
                 }
-            }else {
+
+            } else {
                 System.out.println("No se encontraron autores que vivieron en esa fecha");
             }
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese un año valido");
+        }
+    }
+
+    public void listBooksByLanguage() {
+        List<Language> languages = Arrays.stream(Language.values()).toList();
+        while (true) {
+            System.out.println("Lenguajes:");
+            int i = 1;
+            for (Language language : languages) {
+                System.out.println(i + "-" + language.getDisplayName());
+                i++;
+            }
+            System.out.println("0-" + "Salir");
+            String op;
+            System.out.println("Seleccione el numero del idioma que desea buscar");
+            op = consoleInput.next();
+            consoleInput.nextLine();
+            try {
+                int number = Integer.parseInt(op);
+                if (number == 0) {
+                    break;
+                }
+                Set<BookViewDTO> books = bookService.listBooksByLanguage(languages.get(number - 1));
+                if (books.isEmpty()) {
+                    System.out.println("No se encontraron libros con este idioma");
+                } else {
+                    for (BookViewDTO book : books) {
+                        System.out.println("-----LIBRO-----");
+                        System.out.println("Titulo: " + book.title());
+                        System.out.println("Autores: " + book.authors());
+                        System.out.println("Idiomas:" + book.languages());
+                        System.out.println("Numero de descargas: " + book.downloadCount());
+                        System.out.println("---------------" + "\n");
+                    }
+
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: ingrese un numero");
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Opcion no valida");
+            }
         }
     }
 
