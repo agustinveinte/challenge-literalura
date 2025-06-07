@@ -1,8 +1,6 @@
 package com.agustin.literalura.view;
 
 import com.agustin.literalura.author.api.AuthorApiDTO;
-import com.agustin.literalura.author.domain.Author;
-import com.agustin.literalura.author.domain.AuthorRepository;
 import com.agustin.literalura.author.service.AuthorService;
 import com.agustin.literalura.author.view.AuthorViewDTO;
 import com.agustin.literalura.book.api.BookApi;
@@ -10,7 +8,6 @@ import com.agustin.literalura.book.api.BookApiDTO;
 import com.agustin.literalura.book.service.BookService;
 import com.agustin.literalura.book.service.TheBookAlreadyExistsException;
 import com.agustin.literalura.book.view.BookViewDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +49,7 @@ public class Menu {
                     listAuthors();
                     break;
                 case 4:
+                    listAuthorsAliveInYear();
                     break;
                 case 5:
                     break;
@@ -161,6 +159,27 @@ public class Menu {
             }
         } else {
             System.out.println("No hay autores registrados");
+        }
+    }
+    public void listAuthorsAliveInYear(){
+        String year;
+        Set<AuthorViewDTO> authors=new HashSet<>();
+        System.out.println("Ingrese el año que desea consultar: ");
+        try {
+            year=consoleInput.next();
+            authors=authorService.listAuthorsAliveInYear(Integer.parseInt(year));
+            if (!authors.isEmpty()){
+                for (AuthorViewDTO author : authors) {
+                    System.out.println("Autor: " + author.name());
+                    System.out.println("Fecha de nacimiento: " + author.birthYear());
+                    System.out.println("Fecha de fallecimiento:" + author.deathYear());
+                    System.out.println("Libros: " + author.books()+"\n");
+                }
+            }else {
+                System.out.println("No se encontraron autores que vivieron en esa fecha");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Ingrese un año valido");
         }
     }
 
