@@ -26,10 +26,10 @@ public class Menu {
     }
 
     public void menuPrincipal(BookApi bookApi) {
-
-        int op;
-        do {
+        int op = -1;
+        while (op!=0) {
             System.out.println("""
+                    MENU PRINCIPAL
                     1-Buscar libros por titulo.
                     2-Listar libros registrados.
                     3-Listar autores registrados.
@@ -38,37 +38,46 @@ public class Menu {
                     0-Salir.
                     """);
             System.out.println("Ingrese el numero de opcion:");
-            op = consoleInput.nextInt();
-            switch (op) {
-                case 1:
-                    saveBooksOnDatabase(bookApi);
-                    break;
-                case 2:
-                    listBooks();
-                    break;
-                case 3:
-                    listAuthors();
-                    break;
-                case 4:
-                    listAuthorsAliveInYear();
-                    break;
-                case 5:
-                    listBooksByLanguage();
-                    break;
-                case 0:
-                    break;
-                default:
-                    System.out.println("Opcion no valida");
-                    break;
+            if (consoleInput.hasNextInt()) {
+                op = consoleInput.nextInt();
+                switch (op) {
+                    case 1:
+                        saveBooksOnDatabase(bookApi);
+                        break;
+                    case 2:
+                        listBooks();
+                        break;
+                    case 3:
+                        listAuthors();
+                        break;
+                    case 4:
+                        listAuthorsAliveInYear();
+                        break;
+                    case 5:
+                        listBooksByLanguage();
+                        break;
+                    case 0:
+                        System.out.println("App finalizada");
+                        break;
+                    default:
+                        System.out.println("Opcion no valida");
+                        break;
+                }
+                } else{
+                    String entradaInvalida = consoleInput.next();
+                    System.out.println("Error '" + entradaInvalida + "'. Por favor, ingresa un número entero.");
+                }
             }
-        } while (op != 0);
-    }
+
+        }
+
 
     public List<BookApiDTO> getBooksFromApi(BookApi bookApi) {
         String busqueda;
         List<BookApiDTO> books = new ArrayList<>();
-        System.out.println("Ingrese el titulo del libro que desea buscar");
-        busqueda = consoleInput.nextLine();
+        System.out.println("Ingrese el titulo del libro que desea buscar:");
+        busqueda = consoleInput.next();
+        consoleInput.nextLine();
         try {
             System.out.println("Obteniendo libros...");
             books = bookApi.getBooksByTitleOrAuthor(busqueda);
@@ -94,7 +103,8 @@ public class Menu {
             while (true) {
                 String op;
                 System.out.println("Seleccione el numero de libro que desea guardar (si quiere guardar todos ingrese 'all')");
-                op = consoleInput.nextLine();
+                op = consoleInput.next();
+                consoleInput.nextLine();
                 if (op.equals("all")) {
                     System.out.println("Todos seleccionados");
                     for (BookApiDTO bookApiDTO : booksFromApi) {
@@ -102,6 +112,8 @@ public class Menu {
                             bookService.saveBook(bookApiDTO);
                         } catch (TheBookAlreadyExistsException e) {
                             System.out.println("El libro " + bookApiDTO.title() + " ya se encuentra en la base de datos");
+                        } catch (Exception e){
+                            System.out.println("El libro " + bookApiDTO.title() + " no pudo guardarse");
                         }
                     }
                     break;
@@ -117,6 +129,8 @@ public class Menu {
                                 break;
                             } catch (TheBookAlreadyExistsException e) {
                                 System.out.println("El libro " + bookSelected.title() + " ya se encuentra en la base de datos");
+                            }catch (Exception e){
+                                System.out.println("El libro " + bookSelected.title() + " no pudo guardarse");
                             }
 
                         }
@@ -148,6 +162,9 @@ public class Menu {
         } else {
             System.out.println("No hay libros registrados");
         }
+        consoleInput.nextLine();
+        System.out.println("Presiona Enter para volver al menú...");
+        consoleInput.nextLine();
     }
 
     public void listAuthors() {
@@ -164,6 +181,9 @@ public class Menu {
         } else {
             System.out.println("No hay autores registrados");
         }
+        consoleInput.nextLine();
+        System.out.println("Presiona Enter para volver al menú...");
+        consoleInput.nextLine();
     }
 
     public void listAuthorsAliveInYear() {
@@ -184,6 +204,9 @@ public class Menu {
             } else {
                 System.out.println("No se encontraron autores que vivieron en esa fecha");
             }
+            consoleInput.nextLine();
+            System.out.println("Presiona Enter para volver al menú...");
+            consoleInput.nextLine();
         } catch (NumberFormatException e) {
             System.out.println("Error: Ingrese un año valido");
         }
@@ -211,6 +234,7 @@ public class Menu {
                 Set<BookViewDTO> books = bookService.listBooksByLanguage(languages.get(number - 1));
                 if (books.isEmpty()) {
                     System.out.println("No se encontraron libros con este idioma");
+
                 } else {
                     for (BookViewDTO book : books) {
                         System.out.println("-----LIBRO-----");
@@ -220,13 +244,14 @@ public class Menu {
                         System.out.println("Numero de descargas: " + book.downloadCount());
                         System.out.println("---------------" + "\n");
                     }
-
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Error: ingrese un numero");
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Opcion no valida");
             }
+            System.out.println("Presiona Enter para volver a consultar otro idioma...");
+            consoleInput.nextLine();
         }
     }
 

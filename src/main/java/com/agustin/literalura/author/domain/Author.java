@@ -1,13 +1,7 @@
 package com.agustin.literalura.author.domain;
 
-import com.agustin.literalura.author.api.AuthorApiDTO;
 import com.agustin.literalura.book.domain.Book;
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;

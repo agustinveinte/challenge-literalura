@@ -1,9 +1,7 @@
 package com.agustin.literalura.book.service;
 
-import com.agustin.literalura.LiteraluraApplication;
 import com.agustin.literalura.author.domain.Author;
 import com.agustin.literalura.author.domain.AuthorRepository;
-import com.agustin.literalura.author.view.AuthorViewDTO;
 import com.agustin.literalura.book.api.BookApiDTO;
 import com.agustin.literalura.book.domain.Book;
 import com.agustin.literalura.book.domain.BookRepository;

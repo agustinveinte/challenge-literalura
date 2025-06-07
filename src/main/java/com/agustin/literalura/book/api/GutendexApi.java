@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GutendexApi implements BookApi{
     private final String URL="https://gutendex.com/books/?search=";
-    private ApiConsumer apiConsumer = new ApiConsumer();
+    private final ApiConsumer apiConsumer = new ApiConsumer();
 
     @Override
     public List<BookApiDTO> getBooksByTitleOrAuthor(String titleOrAuthor) {

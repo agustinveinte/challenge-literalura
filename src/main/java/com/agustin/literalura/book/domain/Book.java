@@ -1,7 +1,6 @@
 package com.agustin.literalura.book.domain;
 
 import com.agustin.literalura.author.domain.Author;
-import com.agustin.literalura.book.api.BookApiDTO;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
