@@ -7,6 +7,7 @@ import com.agustin.literalura.book.api.BookApi;
 import com.agustin.literalura.book.api.BookApiDTO;
 import com.agustin.literalura.book.service.BookService;
 import com.agustin.literalura.book.service.TheBookAlreadyExistsException;
+import com.agustin.literalura.book.view.BookViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -28,7 +29,10 @@ public class Menu {
     }
 
     public void menuPrincipal(BookApi bookApi) {
-        System.out.println("""
+
+        int op;
+        do {
+            System.out.println("""
                 1-Buscar libros por titulo.
                 2-Listar libros registrados.
                 3-Listar autores registrados.
@@ -36,14 +40,12 @@ public class Menu {
                 5-Listar libros por idioma.
                 0-Salir.
                 """);
-        int op;
-        do {
             System.out.println("Ingrese el numero de opcion:");
             op = consoleInput.nextInt();
             switch (op) {
                 case 1:saveBooksOnDatabase(bookApi);
                     break;
-                case 2:
+                case 2:listBooks();
                     break;
                 case 3:
                     break;
@@ -126,6 +128,26 @@ public class Menu {
         } else {
             System.out.println("No hay resultados");
         }
+    }
+
+    public void listBooks(){
+        Set<BookViewDTO> books=bookService.listBooks();
+        if (!books.isEmpty()){
+            for (BookViewDTO book : books) {
+                System.out.println("-----LIBRO-----");
+                System.out.println("Titulo: "+book.title());
+                System.out.println("Autores: "+book.authors());
+                System.out.println("Idiomas:"+book.languages());
+                System.out.println("Numero de descargas: "+book.downloadCount());
+                System.out.println("---------------");
+            }
+        }else {
+            System.out.println("No hay libros registrados");
+        }
+    }
+
+    public void listAuthors(){
+
     }
 
 }

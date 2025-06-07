@@ -37,6 +37,6 @@ public class LiteraluraApplication implements CommandLineRunner {
     public void run(String... args) {
         Menu menu = new Menu(bookService,authorService);
         BookApi bookApi=new GutendexApi();
-        menu.saveBooksOnDatabase(bookApi);
+        menu.menuPrincipal(bookApi);
     }
 }
